@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.example.org/MinimalExample"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <import importType="http://schemas.xmlsoap.org/wsdl/" location="http://127.0.0.1:9876/HelloService/greeting?wsdl" namespace="http://bpmn2.workitem.process.jbpm.org/"/>
+
+  <itemDefinition id="_sItem"/>
+
+  <itemDefinition id="_listItem" structureRef="java.util.Collection"/>
+  
+  <itemDefinition id="_listItemOut" structureRef="java.util.Collection"/>
+  <itemDefinition id="_map" structureRef="java.util.Map"/>
+
+  <itemDefinition id="_2-2-4-itemItem" />
+
+  <itemDefinition id="_5-listItem" />
+
+  <itemDefinition id="_2_multiInstanceItemType" />
+  
+  <itemDefinition id="_2_multiInstanceItemOutType"/>
+
+  <itemDefinition id="_2-2-4_InMessageType" />
+  <message id="_2-2-4_InMessage" itemRef="_2-2-4_InMessageType" />
+  <interface id="_2-2-4_ServiceInterface" name="" implementationRef="SimpleService">
+    <operation id="_2-2-4_ServiceOperation" implementationRef="hello" name="hello">
+      <inMessageRef>_2-2-4_InMessage</inMessageRef>
+    </operation>
+  </interface>
+
+  <process processType="Private" isExecutable="true" id="MultiInstanceWSServiceProcess" name="MultiInstanceWSServiceProcess" tns:packageName="defaultPackage">
+
+    <!-- process variables -->
+    <property id="list" itemSubjectRef="_listItem"/>
+    <property id="listOut" itemSubjectRef="_listItemOut"/>
+    <property id="mode" itemSubjectRef="_sItem"/>
+    <property id="map" itemSubjectRef="_map"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="StartProcess" >
+    </startEvent>
+     <scriptTask id="_21" name="Hello" scriptFormat="http://www.java.com/java" >
+      <script>
+      list =  new java.util.ArrayList(map.values());
+      list.remove("Complete");
+      listOut =  new java.util.ArrayList();
+      kcontext.setVariable("list", list);
+      kcontext.setVariable("listOut", listOut);
+     </script>
+    </scriptTask>
+    <serviceTask id="_2" name="Service Task" operationRef="_2-2-4_ServiceOperation" implementation="##WebService" >
+      <ioSpecification>
+        <dataInput id="_2-2-4_param" name="Parameter" />
+        <dataInput id="DataInput_1" name="mode"/>
+        
+        <dataInput id="_2_listInput" name="list"/>
+        <dataOutput id="_2_listOutOutput" name="listOut"/>
+        <dataOutput id="_2-2-4_result" name="Result" />
+        <inputSet>
+          <dataInputRefs>_2-2-4_param</dataInputRefs>
+          <dataInputRefs>DataInput_1</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_2_listOutOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+       <dataInputAssociation>
+        <targetRef>_2-2-4_param</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">#{item}</from>
+          <to xsi:type="tFormalExpression">_2-2-4_param</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>mode</sourceRef>
+        <targetRef>DataInput_1</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_1">
+        <sourceRef>list</sourceRef>
+        <targetRef>_2_listInput</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_2-2-4_result</sourceRef>
+        <targetRef>itemOut</targetRef>
+      </dataOutputAssociation>
+      <multiInstanceLoopCharacteristics>
+        <loopDataInputRef>_2_input</loopDataInputRef>
+        <loopDataOutputRef>_2_listOutOutput</loopDataOutputRef>
+        <inputDataItem id="item" itemSubjectRef="_2_multiInstanceItemType"/>
+        <outputDataItem id="itemOut" itemSubjectRef="_2_multiInstanceItemOutType"/>
+      </multiInstanceLoopCharacteristics>
+    </serviceTask>
+    
+    <scriptTask id="_3" name="Goodbye" >
+      <script>System.out.println("Task Goodbye World " + listOut);</script>
+    </scriptTask>
+    <endEvent id="_4" name="EndProcess" >
+        <terminateEventDefinition/>
+    </endEvent>
+    <userTask id="_5" name="User Task" >
+		<ioSpecification>
+        <dataInput id="_2_CommentInput" name="Comment" />
+        <dataInput id="_2_SkippableInput" name="Skippable" />
+        <dataInput id="_2_TaskNameInput" name="TaskName" />
+        <dataInput id="_2_GroupIdInput" name="GroupId" />
+        <dataInput id="_2_PriorityInput" name="Priority" />
+        <dataOutput id="_2_ResultOutput" name="Result" />
+        <inputSet>
+          <dataInputRefs>_2_CommentInput</dataInputRefs>
+          <dataInputRefs>_2_SkippableInput</dataInputRefs>
+          <dataInputRefs>_2_TaskNameInput</dataInputRefs>
+          <dataInputRefs>_2_GroupIdInput</dataInputRefs>
+          <dataInputRefs>_2_PriorityInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_2_ResultOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>_2_CommentInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_2_CommentInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_2_SkippableInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">false</from>
+          <to xsi:type="tFormalExpression">_2_SkippableInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_2_TaskNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">first</from>
+          <to xsi:type="tFormalExpression">_2_TaskNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_2_GroupIdInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_2_GroupIdInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_2_PriorityInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_2_PriorityInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_2_ResultOutput</sourceRef>
+        <targetRef>map</targetRef>
+      </dataOutputAssociation>
+      <potentialOwner>
+        <resourceAssignmentExpression>
+          <formalExpression>john</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+    
+    <userTask id="_6" name="User Task" >
+      <ioSpecification>
+        <dataInput id="_4_outputInput" name="output" />
+        <dataInput id="_4_CommentInput" name="Comment" />
+        <dataInput id="_4_SkippableInput" name="Skippable" />
+        <dataInput id="_4_TaskNameInput" name="TaskName" />
+        <dataInput id="_4_GroupIdInput" name="GroupId" />
+        <dataInput id="_4_PriorityInput" name="Priority" />
+        <inputSet>
+          <dataInputRefs>_4_outputInput</dataInputRefs>
+          <dataInputRefs>_4_CommentInput</dataInputRefs>
+          <dataInputRefs>_4_SkippableInput</dataInputRefs>
+          <dataInputRefs>_4_TaskNameInput</dataInputRefs>
+          <dataInputRefs>_4_GroupIdInput</dataInputRefs>
+          <dataInputRefs>_4_PriorityInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>listOut</sourceRef>
+        <targetRef>_4_outputInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_CommentInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_4_CommentInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_SkippableInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">false</from>
+          <to xsi:type="tFormalExpression">_4_SkippableInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_TaskNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">second</from>
+          <to xsi:type="tFormalExpression">_4_TaskNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_GroupIdInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_4_GroupIdInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_PriorityInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression"></from>
+          <to xsi:type="tFormalExpression">_4_PriorityInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <potentialOwner>
+        <resourceAssignmentExpression>
+          <formalExpression>john</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_21-_2" sourceRef="_21" targetRef="_2" />
+    <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
+    <sequenceFlow id="_3-_6" sourceRef="_3" targetRef="_6" />
+    <sequenceFlow id="_1-_5" sourceRef="_1" targetRef="_5" />
+    <sequenceFlow id="_5-_21" sourceRef="_5" targetRef="_21" />
+    <sequenceFlow id="_6-_4" sourceRef="_6" targetRef="_4" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="MultiInstanceWSServiceProcess" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="67" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="340" y="16" width="200" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2-2-2" >
+        <dc:Bounds x="391" y="60" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="572" y="67" width="92" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="828" y="67" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_21" >
+        <dc:Bounds x="228" y="67" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="96" y="67" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_6" >
+        <dc:Bounds x="696" y="67" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_2-2-3-_2-2-2" >
+        <di:waypoint x="20" y="20" />
+        <di:waypoint x="101" y="68" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_21-_2" >
+        <di:waypoint x="268" y="91" />
+        <di:waypoint x="440" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
+        <di:waypoint x="440" y="91" />
+        <di:waypoint x="618" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6-_4" >
+        <di:waypoint x="746" y="91" />
+        <di:waypoint x="852" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5-_21" >
+        <di:waypoint x="146" y="91" />
+        <di:waypoint x="268" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_5" >
+        <di:waypoint x="40" y="91" />
+        <di:waypoint x="146" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_6" >
+        <di:waypoint x="618" y="91" />
+        <di:waypoint x="746" y="91" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
