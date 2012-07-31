@@ -10,18 +10,13 @@
 	<name>jBPM5 :: WebService Multiinstance Example</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<drools.version>5.4.0.Final</drools.version>
+		<drools.version>5.5.0-SNAPSHOT</drools.version>
 		<jbpm.version>5.4.0-SNAPSHOT</jbpm.version>
 		<hibernate.version>3.4.0.GA</hibernate.version>
 		<hibernate.core.version>3.3.2.GA</hibernate.core.version>
 		<cxf.version>2.4.4</cxf.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>knowledge-api</artifactId>
-			<version>${drools.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-flow</artifactId>

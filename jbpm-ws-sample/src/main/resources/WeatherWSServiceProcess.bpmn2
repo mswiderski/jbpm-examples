@@ -48,9 +48,9 @@
     <!-- nodes -->
     <startEvent id="_1" name="StartProcess" >
     </startEvent>
-     <scriptTask id="_21" name="Hello" scriptFormat="http://www.java.com/java" >
+     <scriptTask id="_21" name="Prepare input" scriptFormat="http://www.java.com/java" >
       <script>
-      System.out.println("Map is " + map);
+      System.out.println("Get zip code result is " + map);
       list =  new java.util.ArrayList(map.values());
       list.remove("Complete");
       listOut =  new java.util.ArrayList();
@@ -58,7 +58,7 @@
       kcontext.setVariable("listOut", listOut);
      </script>
     </scriptTask>
-    <serviceTask id="_2" name="Service Task" operationRef="_2-2-4_ServiceOperation" implementation="##WebService" >
+    <serviceTask id="_2" name="Get weather forecast" operationRef="_2-2-4_ServiceOperation" implementation="##WebService" >
       <ioSpecification>
         <dataInput id="_2-2-4_param" name="Parameter" />
         <dataInput id="DataInput_1" name="mode"/>
@@ -101,13 +101,13 @@
       </multiInstanceLoopCharacteristics>
     </serviceTask>
     
-    <scriptTask id="_3" name="Goodbye" >
-      <script>System.out.println("Task Goodbye World " + listOut);</script>
+    <scriptTask id="_3" name="Log result" >
+      <script>System.out.println("Service result " + listOut);</script>
     </scriptTask>
     <endEvent id="_4" name="EndProcess" >
         <terminateEventDefinition/>
     </endEvent>
-    <userTask id="_5" name="User Task" >
+    <userTask id="_5" name="Get zip codes" >
 		<ioSpecification>
         <dataInput id="_2_CommentInput" name="Comment" />
         <dataInput id="_2_SkippableInput" name="Skippable" />
@@ -172,7 +172,7 @@
       </potentialOwner>
     </userTask>
     
-    <userTask id="_6" name="User Task" >
+    <userTask id="_6" name="Show forecast" >
       <ioSpecification>
         <dataInput id="_4_outputInput" name="output" />
         <dataInput id="_4_CommentInput" name="Comment" />
@@ -255,14 +255,8 @@
       <bpmndi:BPMNShape bpmnElement="_2" >
         <dc:Bounds x="228" y="16" width="200" height="150" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_2-1" >
-        <dc:Bounds x="246" y="41" width="48" height="48" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_2-3" >
-        <dc:Bounds x="348" y="109" width="48" height="48" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_2-2-4" >
-        <dc:Bounds x="318" y="42" width="100" height="48" />
+      <bpmndi:BPMNShape bpmnElement="_21" >
+        <dc:Bounds x="128" y="26" width="200" height="150" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="_3" >
         <dc:Bounds x="460" y="67" width="92" height="48" />
@@ -273,27 +267,30 @@
       <bpmndi:BPMNShape bpmnElement="_5" >
         <dc:Bounds x="96" y="67" width="100" height="48" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="_2-2-4-_2-3" >
+      <bpmndi:BPMNShape bpmnElement="_6" >
+        <dc:Bounds x="96" y="67" width="140" height="148" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_21-_2" >
         <di:waypoint x="140" y="50" />
         <di:waypoint x="144" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_2-1-_2-2-4" >
+      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
         <di:waypoint x="42" y="49" />
         <di:waypoint x="140" y="50" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_5-_2" >
+      <bpmndi:BPMNEdge bpmnElement="_3-_6" >
         <di:waypoint x="146" y="91" />
         <di:waypoint x="328" y="91" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
+      <bpmndi:BPMNEdge bpmnElement="_1-_5" >
         <di:waypoint x="328" y="91" />
         <di:waypoint x="506" y="91" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_3-_4" >
+      <bpmndi:BPMNEdge bpmnElement="_5-_21" >
         <di:waypoint x="506" y="91" />
         <di:waypoint x="608" y="91" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_1-_5" >
+      <bpmndi:BPMNEdge bpmnElement="_6-_4" >
         <di:waypoint x="40" y="91" />
         <di:waypoint x="146" y="91" />
       </bpmndi:BPMNEdge>

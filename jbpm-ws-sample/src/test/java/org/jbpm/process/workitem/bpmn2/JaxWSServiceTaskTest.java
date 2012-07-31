@@ -87,7 +87,7 @@ public class JaxWSServiceTaskTest extends JbpmJUnitTestCase {
     
     @Test
     public void testPublicServiceInvocation() throws Exception {
-        StatefulKnowledgeSession ksession = createKnowledgeSession("open/WeatherWSServiceProcess.bpmn2");
+        StatefulKnowledgeSession ksession = createKnowledgeSession("WeatherWSServiceProcess.bpmn2");
         
         TestWorkItemHandler htHandler = new TestWorkItemHandler();
         
