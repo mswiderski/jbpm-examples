@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+  xmlns:drools="http://drools.org/schema/drools-spring"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://drools.org/schema/drools-spring org/drools/container/spring/drools-spring-1.2.0.xsd
+    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+
+  <bean id="entityManagerFactory"
+    class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="jpaVendorAdapter">
+      <bean
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+    </property>
+    <property name="persistenceXmlLocation" value="classpath*:META-INF/persistence.xml" />
+
+    <property name="persistenceUnitName" value="org.jbpm.runtime"></property>
+  </bean>
+
+  <bean id="transactionManager"
+    class="org.springframework.transaction.jta.JtaTransactionManager">
+    <property name="transactionManager" ref="bitronixTransactionManager" />
+  </bean>
+
+  <!--jdbc:embedded-database id="dataSource" type="H2" /-->
+  
+  <bean id="bitronixTransactionManager" factory-method="getTransactionManager"
+        class="bitronix.tm.TransactionManagerServices"
+        destroy-method="shutdown" />
+
+  <drools:kbase id="kbase1">
+    <drools:resources>
+      <drools:resource type="BPMN2" source="classpath:scripttask.bpmn2" />
+      <drools:resource type="BPMN2" source="classpath:humantask.bpmn2" />
+    </drools:resources>
+  </drools:kbase>
+
+
+  <drools:ksession id="ksession1" type="stateful" kbase="kbase1">
+    <drools:configuration>
+      <drools:jpa-persistence>
+        <drools:transaction-manager ref="transactionManager" />
+        <drools:entity-manager-factory
+          ref="entityManagerFactory" />
+      </drools:jpa-persistence>
+      <!--drools:work-item-handlers> <drools:work-item-handler name="Human 
+        Task" ref="wshtHandler" /> </drools:work-item-handlers -->
+    </drools:configuration>
+  </drools:ksession>
+
+  <bean class="org.jbpm.spring.domain.ProcessEngine" id="processEngine">
+    <property name="ksession" ref="ksession1"></property>
+  </bean>
+  
+  <bean class="org.jbpm.spring.domain.HumanTaskEngine" id="humanTaskEngine">
+    <property name="taskService" ref="localTaskService"></property>
+  </bean>
+
+  <bean id="wshtHandler" class="org.jbpm.spring.domain.SelfRegisteringLocalHTHandler"
+    init-method="connect" destroy-method="dispose">
+    <constructor-arg ref="localTaskService"></constructor-arg>
+    <constructor-arg ref="ksession1"></constructor-arg>
+  </bean>
+
+  <bean id="localTaskService" class="org.jbpm.task.service.local.LocalTaskService"
+    destroy-method="dispose" scope="prototype">
+    <constructor-arg ref="taskService"></constructor-arg>
+  </bean>
+
+  <bean id="taskService" class="org.jbpm.task.service.TaskService">
+    <constructor-arg ref="entityManagerFactory"></constructor-arg>
+    <constructor-arg ref="systemEventListener"></constructor-arg>
+  </bean>
+
+  <bean id="systemEventListener" class="org.drools.SystemEventListenerFactory"
+    factory-method="getSystemEventListener" />
+
+  <bean id="userGroupCallbackManager" class="org.jbpm.task.identity.UserGroupCallbackManager"
+    factory-method="getInstance">
+        <property name="callback" ref="defaultCallback"></property>
+  </bean>
+  
+  <bean id="defaultCallback" class="org.jbpm.task.identity.DefaultUserGroupCallbackImpl">
+    <constructor-arg value="classpath:/roles.properties"></constructor-arg>
+  </bean>
+</beans>
