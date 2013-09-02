@@ -1,0 +1,1 @@
+jBPM v6 CDI sample that relies on jbpm-kie-services for advanced process engine capabilities.

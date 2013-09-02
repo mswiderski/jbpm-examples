@@ -1,0 +1,1 @@
+jBPM v6 CDI sample
