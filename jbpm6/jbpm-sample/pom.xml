@@ -18,7 +18,7 @@
     <jboss.javaee.version>1.0.0.Final</jboss.javaee.version>
     <logback.version>1.0.9</logback.version>
     <h2.version>1.3.161</h2.version>
-    <btm.version>3.0.0-SNAPSHOT</btm.version>
+    <btm.version>2.1.4</btm.version>
   </properties>
   <dependencyManagement>
     <dependencies>
