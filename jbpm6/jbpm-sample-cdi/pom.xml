@@ -10,8 +10,8 @@
   <name>jBPM6 :: CDI sample application</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <drools.version>6.0.0.CR2</drools.version>
-    <jbpm.version>6.0.0.CR2</jbpm.version>
+    <drools.version>6.0.1.Final</drools.version>
+    <jbpm.version>6.0.1.Final</jbpm.version>
     <hibernate.version>4.2.0.Final</hibernate.version>
     <hibernate.core.version>4.2.0.Final</hibernate.core.version>
     <slf4j.version>1.6.4</slf4j.version>
@@ -77,7 +77,6 @@
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-shared-services</artifactId>
-      <classifier>btm</classifier>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

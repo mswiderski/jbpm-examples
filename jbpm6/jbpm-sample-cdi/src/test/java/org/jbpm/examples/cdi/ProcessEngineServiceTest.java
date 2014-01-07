@@ -61,8 +61,7 @@ public class ProcessEngineServiceTest {
     @Deployment()
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(JavaArchive.class, "jbpm-cdi-sample.jar")
-                .addPackage("org.jboss.seam.transaction") //seam-persistence
-                .addPackage("org.jbpm.services.task")
+        		.addPackage("org.jbpm.services.task")
                 .addPackage("org.jbpm.services.task.wih") // work items org.jbpm.services.task.wih
                 .addPackage("org.jbpm.services.task.annotations")
                 .addPackage("org.jbpm.services.task.api")
@@ -102,6 +101,7 @@ public class ProcessEngineServiceTest {
                 
                 .addPackage("org.jbpm.kie.services.api")
                 .addPackage("org.jbpm.kie.services.impl")
+                .addPackage("org.jbpm.kie.services.cdi.producer")
                 .addPackage("org.jbpm.kie.services.api.bpmn2")
                 .addPackage("org.jbpm.kie.services.impl.bpmn2")
                 .addPackage("org.jbpm.kie.services.impl.event.listeners")

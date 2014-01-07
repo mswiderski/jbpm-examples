@@ -19,9 +19,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jbpm.kie.services.api.DeploymentUnit.RuntimeStrategy;
 import org.jbpm.kie.services.impl.KModuleDeploymentUnit;
-import org.jbpm.kie.services.impl.model.ProcessDesc;
+import org.jbpm.kie.services.impl.model.ProcessAssetDesc;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -35,6 +34,7 @@ import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.task.TaskService;
 import org.kie.api.task.model.TaskSummary;
+import org.kie.internal.deployment.DeploymentUnit.RuntimeStrategy;
 import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.runtime.manager.context.ProcessInstanceIdContext;
 import org.kie.scanner.MavenRepository;
@@ -75,8 +75,7 @@ public class ProcessEngineServiceTest {
     @Deployment()
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(JavaArchive.class, "jbpm-cdi-sample.jar")
-                .addPackage("org.jboss.seam.transaction") //seam-persistence
-                .addPackage("org.jbpm.services.task")
+        		.addPackage("org.jbpm.services.task")
                 .addPackage("org.jbpm.services.task.wih") // work items org.jbpm.services.task.wih
                 .addPackage("org.jbpm.services.task.annotations")
                 .addPackage("org.jbpm.services.task.api")
@@ -116,6 +115,7 @@ public class ProcessEngineServiceTest {
                 
                 .addPackage("org.jbpm.kie.services.api")
                 .addPackage("org.jbpm.kie.services.impl")
+                .addPackage("org.jbpm.kie.services.cdi.producer")
                 .addPackage("org.jbpm.kie.services.api.bpmn2")
                 .addPackage("org.jbpm.kie.services.impl.bpmn2")
                 .addPackage("org.jbpm.kie.services.impl.event.listeners")
@@ -181,7 +181,7 @@ public class ProcessEngineServiceTest {
         KModuleDeploymentUnit unit = new KModuleDeploymentUnit(GROUP_ID, ARTIFACT_ID, VERSION);
         processService.deployUnit(unit);
         logger.info("TEST:Unit {} has been deployed", unit);
-        Collection<ProcessDesc> processes = processService.getProcesses();
+        Collection<ProcessAssetDesc> processes = processService.getProcesses();
         assertNotNull(processes);
         assertEquals(2, processes.size());
         
@@ -212,7 +212,7 @@ public class ProcessEngineServiceTest {
         unit.setStrategy(RuntimeStrategy.PER_PROCESS_INSTANCE);
         processService.deployUnit(unit);
         logger.info("TEST:Unit {} has been deployed", unit);
-        Collection<ProcessDesc> processes = processService.getProcesses();
+        Collection<ProcessAssetDesc> processes = processService.getProcesses();
         assertNotNull(processes);
         assertEquals(2, processes.size());
         
@@ -242,7 +242,7 @@ public class ProcessEngineServiceTest {
         KModuleDeploymentUnit unit = new KModuleDeploymentUnit(GROUP_ID, ARTIFACT_ID, VERSION);
         processService.deployUnit(unit);
         logger.info("TEST:Unit {} has been deployed", unit);
-        Collection<ProcessDesc> processes = processService.getProcesses();
+        Collection<ProcessAssetDesc> processes = processService.getProcesses();
         assertNotNull(processes);
         assertEquals(2, processes.size());
         
@@ -329,7 +329,7 @@ public class ProcessEngineServiceTest {
         processService.deployUnit(unit);
         unit.setStrategy(RuntimeStrategy.PER_PROCESS_INSTANCE);
         logger.info("TEST:Unit {} has been deployed", unit);
-        Collection<ProcessDesc> processes = processService.getProcesses();
+        Collection<ProcessAssetDesc> processes = processService.getProcesses();
         assertNotNull(processes);
         assertEquals(2, processes.size());
         
