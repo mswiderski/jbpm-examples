@@ -36,8 +36,9 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.commons.io.IOUtils;
 import org.drools.core.marshalling.impl.ClassObjectMarshallingStrategyAcceptor;
 import org.drools.core.marshalling.impl.SerializablePlaceholderResolverStrategy;
+import org.jbpm.document.Document;
+import org.jbpm.document.service.impl.DocumentImpl;
 import org.jbpm.integration.cmis.helper.ManageVariablesProcessEventListener;
-import org.jbpm.integration.cmis.impl.DocumentImpl;
 import org.jbpm.integration.cmis.impl.OpenCMISPlaceholderResolverStrategy;
 import org.jbpm.integration.cmis.impl.OpenCMISSupport;
 import org.jbpm.runtime.manager.impl.DefaultRegisterableItemsFactory;
@@ -67,7 +68,7 @@ import org.kie.internal.task.api.InternalTaskService;
 
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 // tests are ignored as they rely on external service and are here to illustrate the usage
-@Ignore
+//@Ignore
 public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 
     private static PoolingDataSource pds;  
@@ -148,13 +149,12 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
         assertNotNull(ksession);
         Map<String, Object> params = new HashMap<String, Object>();
         Document doc = new DocumentImpl();
-        doc.setDocumentName("simple"+System.currentTimeMillis()+".txt");
-		doc.setDocumentType("text/plain");
-		doc.setFolderName("jbpm-test");
-		doc.setFolderPath("/");
+        doc.setName("simple"+System.currentTimeMillis()+".txt");
+		doc.addAttribute("type", "text/plain");
+		doc.addAttribute("location", "/jbpm-test");
 		String contents = "Initial text";
 	    byte[] buf = contents.getBytes();
-		doc.setDocumentContent(buf);
+		doc.setContent(buf);
 	
 		
 		params.put("document", doc);
@@ -177,12 +177,12 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
         
         Document document = (Document) taskData.get("doc_in");
         
-        System.out.println("At first task " + new String(document.getDocumentContent()));
+        System.out.println("At first task " + new String(document.getContent()));
         
         contents = "This is some updated test content for our renamed second document.";
 	    buf = contents.getBytes();
 	    
-        document.setDocumentContent(buf);
+        document.setContent(buf);
         taskService.start(taskId, "john");
         taskService.complete(taskId, "john", (Map)Collections.singletonMap("doc_out", document));
         
@@ -194,11 +194,11 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
         taskData = ((InternalTaskService)taskService).getTaskContent(taskId);
         
         document = (Document) taskData.get("doc_in");
-        System.out.println("At second task " + new String(document.getDocumentContent()));
+        System.out.println("At second task " + new String(document.getContent()));
         contents = "This is some updated test content for our renamed second document. again and again...";
 	    buf = contents.getBytes();
 
-        document.setDocumentContent(buf);
+        document.setContent(buf);
         taskService.start(taskId, "john");
         taskService.complete(taskId, "john", (Map)Collections.singletonMap("doc_out", document));
         
@@ -224,7 +224,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 	        assertNotNull(ksession);
 	        Map<String, Object> params = new HashMap<String, Object>();
 	        Document doc = new DocumentImpl();
-	        doc.setObjectId(cmisDoc.getId());
+	        doc.setIdentifier(cmisDoc.getId());
 	        	
 			params.put("document", doc);
 	        ProcessInstance processInstance = ksession.startProcess("cmisintegrationfetch", params);
@@ -245,7 +245,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 	        Map<String, Object> taskData = ((InternalTaskService)taskService).getTaskContent(taskId);
 	        
 	        Document document = (Document) taskData.get("doc_in");
-	        String currentContent = new String(document.getDocumentContent());
+	        String currentContent = new String(document.getContent());
 	        System.out.println("At first task " + currentContent);
 	        
 	        assertEquals("simple content", currentContent);
@@ -253,7 +253,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 	        String contents = currentContent + "\nThis is some updated test content for our renamed second document.";
 		    byte[] buf = contents.getBytes();
 		    
-	        document.setDocumentContent(buf);
+	        document.setContent(buf);
 	        taskService.start(taskId, "john");
 	        taskService.complete(taskId, "john", (Map)Collections.singletonMap("doc_out", document));
 	        
@@ -262,7 +262,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 	        processInstance = ksession.getProcessInstance(processInstance.getId());
 	        assertNull(processInstance);   
 	        
-	        String finalContent = getDocumentContent(session, document.getObjectId());
+	        String finalContent = getDocumentContent(session, document.getIdentifier());
 	        System.out.println("Final content " + finalContent);
 	        assertEquals(contents, finalContent);
         } finally {

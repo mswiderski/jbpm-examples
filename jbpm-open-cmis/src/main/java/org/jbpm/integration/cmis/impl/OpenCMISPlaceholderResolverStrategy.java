@@ -27,7 +27,7 @@ import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.drools.core.common.DroolsObjectInputStream;
-import org.jbpm.integration.cmis.Document;
+import org.jbpm.document.Document;
 import org.jbpm.integration.cmis.UpdateMode;
 import org.kie.api.marshalling.ObjectMarshallingStrategy;
 
@@ -88,27 +88,30 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 		Document document = (Document) object;
 		Session session = getRepositorySession(user, password, url, repository);
 		try {
-			if (document.getDocumentContent() != null) {
-				if (document.getObjectId() == null) {
-					Folder parent = findFolderForPath(session, document.getFolderPath()+document.getFolderName());
+			if (document.getContent() != null) {
+				String type = document.getAttribute("type");
+				if (document.getIdentifier() == null) {
+					String location = document.getAttribute("location");
+					
+					Folder parent = findFolderForPath(session, location);
 					if (parent == null) {
-						parent = createFolder(session, null, document.getFolderPath()+document.getFolderName());
+						parent = createFolder(session, null, location);
 					}
-					org.apache.chemistry.opencmis.client.api.Document doc = createDocument(session, parent, document.getDocumentName(), document.getDocumentType(), document.getDocumentContent());
-					document.setObjectId(doc.getId());
-					document.setUpdated(false);
+					org.apache.chemistry.opencmis.client.api.Document doc = createDocument(session, parent, document.getName(), type, document.getContent());
+					document.setIdentifier(doc.getId());
+					document.addAttribute("updated", "true");
 				} else {
-					if (document.getDocumentContent() != null && document.isUpdated()) {
-						org.apache.chemistry.opencmis.client.api.Document doc = updateDocument(session, document.getObjectId(), document.getDocumentType(), document.getDocumentContent(), mode);
+					if (document.getContent() != null && "true".equals(document.getAttribute("updated"))) {
+						org.apache.chemistry.opencmis.client.api.Document doc = updateDocument(session, document.getIdentifier(), type, document.getContent(), mode);
 						
-						document.setObjectId(doc.getId());
-						document.setUpdated(false);
+						document.setIdentifier(doc.getId());
+						document.addAttribute("updated", "false");
 					}
 				}
 			}
 			ByteArrayOutputStream buff = new ByteArrayOutputStream();
 	        ObjectOutputStream oos = new ObjectOutputStream( buff );
-	        oos.writeUTF(document.getObjectId());
+	        oos.writeUTF(document.getIdentifier());
 	        oos.writeUTF(object.getClass().getCanonicalName());
 	        oos.close();
 	        return buff.toByteArray();
@@ -126,15 +129,14 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 			org.apache.chemistry.opencmis.client.api.Document doc = (org.apache.chemistry.opencmis.client.api.Document) findObjectForId(session, objectId);
 			Document document = (Document) Class.forName(canonicalName).newInstance();
 			
-			document.setObjectId(objectId);
-			document.setDocumentName(doc.getName());			
-			document.setFolderName(getFolderName(doc.getParents()));
-			document.setFolderPath(getPathAsString(doc.getPaths()));
+			document.setIdentifier(objectId);
+			document.setName(doc.getName());
+			document.addAttribute("location", getFolderName(doc.getParents()) + getPathAsString(doc.getPaths()));
 			if (doc.getContentStream() != null) {
 				ContentStream stream = doc.getContentStream();
-				document.setDocumentContent(IOUtils.toByteArray(stream.getStream()));
-				document.setUpdated(false);
-				document.setDocumentType(stream.getMimeType());
+				document.setContent(IOUtils.toByteArray(stream.getStream()));
+				document.addAttribute("updated", "false");
+				document.addAttribute("type", stream.getMimeType());				
 			}
 			return document;
 		} catch(Exception e) {
@@ -160,25 +162,32 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 		Document document = (Document) object;
 		Session session = getRepositorySession(user, password, url, repository);
 		try {
-			if (document.getDocumentContent() != null) {
-				if (document.getObjectId() == null) {
-					Folder parent = findFolderForPath(session, document.getFolderPath()+document.getFolderName());
+			if (document.getContent() != null) {
+				String type = document.getAttribute("type");
+				if (document.getIdentifier() == null) {
+					String location = document.getAttribute("location");
+					
+					Folder parent = findFolderForPath(session, location);
 					if (parent == null) {
-						parent = createFolder(session, null, document.getFolderPath()+document.getFolderName());
+						parent = createFolder(session, null, location);
 					}
-					org.apache.chemistry.opencmis.client.api.Document doc = createDocument(session, parent, document.getDocumentName(), document.getDocumentType(), document.getDocumentContent());
-					document.setObjectId(doc.getId());
-					document.setUpdated(false);
+					org.apache.chemistry.opencmis.client.api.Document doc = createDocument(session, parent, document.getName(), type, document.getContent());
+					document.setIdentifier(doc.getId());
+					document.addAttribute("updated", "false");
 				} else {
-					if (document.getDocumentContent() != null && document.isUpdated()) {
-						org.apache.chemistry.opencmis.client.api.Document doc = updateDocument(session, document.getObjectId(), document.getDocumentType(), document.getDocumentContent(), mode);
-						document.setObjectId(doc.getId());
-						document.setUpdated(false);
+					if (document.getContent() != null && "true".equals(document.getAttribute("updated"))) {
+						org.apache.chemistry.opencmis.client.api.Document doc = updateDocument(session, document.getIdentifier(), type, document.getContent(), mode);
+						
+						document.setIdentifier(doc.getId());
+						document.addAttribute("updated", "false");
 					}
 				}
 			}
-			os.writeUTF(document.getObjectId());
-			os.writeUTF(object.getClass().getCanonicalName());
+			ByteArrayOutputStream buff = new ByteArrayOutputStream();
+	        ObjectOutputStream oos = new ObjectOutputStream( buff );
+	        oos.writeUTF(document.getIdentifier());
+	        oos.writeUTF(object.getClass().getCanonicalName());
+	        oos.close();
 		} finally {
 			session.clear();
 		}
@@ -192,21 +201,19 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 			org.apache.chemistry.opencmis.client.api.Document doc = (org.apache.chemistry.opencmis.client.api.Document) findObjectForId(session, objectId);
 			Document document = (Document) Class.forName(canonicalName).newInstance();
 			
-			document.setObjectId(objectId);
-			document.setDocumentName(doc.getName());
-			document.setDocumentType(doc.getType().getDisplayName());
-			document.setFolderName(getFolderName(doc.getParents()));
-			document.setFolderPath(getPathAsString(doc.getPaths()));
+			document.setIdentifier(objectId);
+			document.setName(doc.getName());
+			document.addAttribute("location", getFolderName(doc.getParents()) + getPathAsString(doc.getPaths()));
 			if (doc.getContentStream() != null) {
 				ContentStream stream = doc.getContentStream();
-				document.setDocumentContent(IOUtils.toByteArray(stream.getStream()));
-				document.setUpdated(false);
-				document.setDocumentType(stream.getMimeType());
+				document.setContent(IOUtils.toByteArray(stream.getStream()));
+				document.addAttribute("updated", "false");
+				document.addAttribute("type", stream.getMimeType());				
 			}
 			return document;
 		} catch(Exception e) {
 			throw new RuntimeException("Cannot read document from CMIS", e);
-		} finally {
+		} finally {			
 			session.clear();
 		}
 	}

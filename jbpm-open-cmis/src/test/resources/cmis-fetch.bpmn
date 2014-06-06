@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_5paaYI8dEeO2ffDL2o7V8w" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.omg.org/bpmn20" typeLanguage="http://www.java.com/javaTypes">
-  <bpmn2:itemDefinition id="_documentItem" structureRef="org.jbpm.integration.cmis.Document"/>
-  <bpmn2:itemDefinition id="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputXItem" structureRef="org.jbpm.integration.cmis.Document"/>
-  <bpmn2:itemDefinition id="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_outOutputXItem" structureRef="org.jbpm.integration.cmis.Document"/>
+  <bpmn2:itemDefinition id="_documentItem" structureRef="org.jbpm.document.Document"/>
+  <bpmn2:itemDefinition id="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputXItem" structureRef="org.jbpm.document.Document"/>
+  <bpmn2:itemDefinition id="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_outOutputXItem" structureRef="org.jbpm.document.Document"/>
   <bpmn2:process id="cmisintegrationfetch" drools:packageName="org.jbpm" drools:version="1.0" name="cmisintegration" isExecutable="true">
     <bpmn2:property id="document" itemSubjectRef="_documentItem"/>
     <bpmn2:startEvent id="processStartEvent" drools:bgcolor="#9acd32" drools:selectable="true" name="">
@@ -18,8 +18,8 @@
       <bpmn2:incoming>_3B9809EB-0557-4AD9-BEDB-C75DCD131DF0</bpmn2:incoming>
       <bpmn2:outgoing>_116A61D8-3C09-4698-B14D-1401EE547815</bpmn2:outgoing>
       <bpmn2:ioSpecification id="_5paaYY8dEeO2ffDL2o7V8w">
-        <bpmn2:dataInput id="_FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputX" drools:dtype="org.jbpm.integration.cmis.Document" itemSubjectRef="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputXItem" name="doc_in"/>
-        <bpmn2:dataOutput id="_FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_outOutputX" drools:dtype="org.jbpm.integration.cmis.Document" itemSubjectRef="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_outOutputXItem" name="doc_out"/>
+        <bpmn2:dataInput id="_FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputX" drools:dtype="org.jbpm.document.Document" itemSubjectRef="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputXItem" name="doc_in"/>
+        <bpmn2:dataOutput id="_FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_outOutputX" drools:dtype="org.jbpm.document.Document" itemSubjectRef="__FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_outOutputXItem" name="doc_out"/>
         <bpmn2:inputSet id="_5paaYo8dEeO2ffDL2o7V8w">
           <bpmn2:dataInputRefs>_FE1897DD-9D8E-4E03-99CF-D282C30656FA_doc_inInputX</bpmn2:dataInputRefs>
         </bpmn2:inputSet>

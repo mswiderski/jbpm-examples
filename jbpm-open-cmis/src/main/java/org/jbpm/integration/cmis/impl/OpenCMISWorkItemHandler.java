@@ -24,7 +24,7 @@ import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
-import org.jbpm.integration.cmis.Document;
+import org.jbpm.document.Document;
 import org.jbpm.integration.cmis.Operation;
 import org.jbpm.integration.cmis.UpdateMode;
 import org.kie.api.runtime.process.WorkItem;
@@ -99,48 +99,49 @@ public class OpenCMISWorkItemHandler extends OpenCMISSupport implements WorkItem
 		
 		Session session = getRepositorySession(getUser(workItem), getPassword(workItem), getUrl(workItem), getRepository(workItem));
 		try {
+			String type = document.getAttribute("type");
+			String location = document.getAttribute("location");
 			switch (lOperation) {
 			case DOC_CREATE:
-				if (document.getObjectId() == null) {
-					Folder parent = findFolderForPath(session, document.getFolderPath()+document.getFolderName());
+				if (document.getIdentifier() == null) {
+					Folder parent = findFolderForPath(session, location);
 					if (parent == null) {
-						parent = createFolder(session, null, document.getFolderPath()+document.getFolderName());
+						parent = createFolder(session, null, location);
 					}
-					org.apache.chemistry.opencmis.client.api.Document doc = createDocument(session, parent, document.getDocumentName(), document.getDocumentType(), document.getDocumentContent());
-					document.setObjectId(doc.getId());
-					document.setUpdated(false);
+					org.apache.chemistry.opencmis.client.api.Document doc = createDocument(session, parent, document.getName(), type, document.getContent());
+					document.setIdentifier(doc.getId());
+					document.addAttribute("updated", "false");
 				}
 				break;
 			case DOC_UPDATE:
-				if (document.getDocumentContent() != null) {
-					org.apache.chemistry.opencmis.client.api.Document doc = updateDocument(session, document.getObjectId(), document.getDocumentType(), document.getDocumentContent(), lMode);
-					document.setObjectId(doc.getId());
-					document.setUpdated(false);
+				if (document.getContent() != null) {
+					org.apache.chemistry.opencmis.client.api.Document doc = updateDocument(session, document.getIdentifier(), type, document.getContent(), lMode);
+					document.setIdentifier(doc.getId());
+					document.addAttribute("updated", "false");
 				}
 				break;
 			case DOC_DELETE:
-				if (document.getObjectId() != null) {
-					deleteDocument(session, document.getObjectId());
-					document.setDocumentContent(null);
-					document.setUpdated(false);
+				if (document.getIdentifier() != null) {
+					deleteDocument(session, document.getIdentifier());
+					document.setContent(null);
+					document.addAttribute("updated", "false");
 				}
 				break;
 			case DOC_FETCH:
-				if (document.getObjectId() != null) {
+				if (document.getIdentifier() != null) {
 					org.apache.chemistry.opencmis.client.api.Document doc = 
-							(org.apache.chemistry.opencmis.client.api.Document) findObjectForId(session, document.getObjectId());
-					document.setDocumentName(doc.getName());			
-					document.setFolderName(getFolderName(doc.getParents()));
-					document.setFolderPath(getPathAsString(doc.getPaths()));
+							(org.apache.chemistry.opencmis.client.api.Document) findObjectForId(session, document.getIdentifier());
+					document.setName(doc.getName());			
+					document.addAttribute("location", getFolderName(doc.getParents()) + getPathAsString(doc.getPaths()));
 					if (doc.getContentStream() != null) {
 						ContentStream stream = doc.getContentStream();
 						try {
-							document.setDocumentContent(IOUtils.toByteArray(stream.getStream()));
+							document.setContent(IOUtils.toByteArray(stream.getStream()));
 						} catch (IOException e) {
 							throw new RuntimeException("Cannot read document content", e);
 						}
-						document.setUpdated(false);
-						document.setDocumentType(stream.getMimeType());
+						document.addAttribute("updated", "false");
+						document.addAttribute("type", stream.getMimeType());	
 					}
 				}
 				break;

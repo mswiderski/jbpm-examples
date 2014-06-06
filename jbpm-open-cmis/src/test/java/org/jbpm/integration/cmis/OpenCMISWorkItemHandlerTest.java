@@ -25,7 +25,8 @@ import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.drools.core.process.instance.impl.WorkItemImpl;
-import org.jbpm.integration.cmis.impl.DocumentImpl;
+import org.jbpm.document.Document;
+import org.jbpm.document.service.impl.DocumentImpl;
 import org.jbpm.integration.cmis.impl.OpenCMISSupport;
 import org.jbpm.integration.cmis.impl.OpenCMISWorkItemHandler;
 import org.junit.Ignore;
@@ -49,16 +50,15 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
-		doc.setDocumentName("simple" + System.currentTimeMillis() +".txt");
-		doc.setDocumentType("text/plain");
-		doc.setFolderName("jbpm-test");
-		doc.setFolderPath("/");
-		doc.setDocumentContent(content.getBytes());
+		doc.setName("simple" + System.currentTimeMillis() +".txt");
+		doc.addAttribute("type", "text/plain");
+		doc.addAttribute("location", "/jbpm-test");
+		doc.setContent(content.getBytes());
 		
 		workItem.setParameter("Document", doc);
 		handler.executeWorkItem(workItem, null);
 		
-		String storedValue = getDocumentContent(doc.getObjectId());
+		String storedValue = getDocumentContent(doc.getIdentifier());
 		assertEquals(content, storedValue);
 	}
 	
@@ -72,24 +72,23 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
-		doc.setDocumentName("simple" + System.currentTimeMillis() +".txt");
-		doc.setDocumentType("text/plain");
-		doc.setFolderName("jbpm-test");
-		doc.setFolderPath("/");
-		doc.setDocumentContent(content.getBytes());
+		doc.setName("simple" + System.currentTimeMillis() +".txt");
+		doc.addAttribute("type", "text/plain");
+		doc.addAttribute("location", "/jbpm-test");
+		doc.setContent(content.getBytes());
 		
 		workItem.setParameter("Document", doc);
 		handler.executeWorkItem(workItem, null);
 		
-		String storedValue = getDocumentContent(doc.getObjectId());
+		String storedValue = getDocumentContent(doc.getIdentifier());
 		assertEquals(content, storedValue);
 		
-		doc.setDocumentContent("updated content".getBytes());
+		doc.setContent("updated content".getBytes());
 		
 		workItem.setParameter("Operation", "DOC_UPDATE");
 		handler.executeWorkItem(workItem, null);
 		
-		storedValue = getDocumentContent(doc.getObjectId());
+		storedValue = getDocumentContent(doc.getIdentifier());
 		assertEquals("updated content", storedValue);
 	}
 	
@@ -103,22 +102,21 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
-		doc.setDocumentName("simple" + System.currentTimeMillis() +".txt");
-		doc.setDocumentType("text/plain");
-		doc.setFolderName("jbpm-test");
-		doc.setFolderPath("/");
-		doc.setDocumentContent(content.getBytes());
+		doc.setName("simple" + System.currentTimeMillis() +".txt");
+		doc.addAttribute("type", "text/plain");
+		doc.addAttribute("location", "/jbpm-test");
+		doc.setContent(content.getBytes());
 		
 		workItem.setParameter("Document", doc);
 		handler.executeWorkItem(workItem, null);
 		
-		String storedValue = getDocumentContent(doc.getObjectId());
+		String storedValue = getDocumentContent(doc.getIdentifier());
 		assertEquals(content, storedValue);
 				
 		workItem.setParameter("Operation", "DOC_DELETE");
 		handler.executeWorkItem(workItem, null);
 		
-		storedValue = getDocumentContent(doc.getObjectId());
+		storedValue = getDocumentContent(doc.getIdentifier());
 		assertNull(storedValue);
 	}
 
@@ -132,22 +130,21 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
-		doc.setDocumentName("simple" + System.currentTimeMillis() +".txt");
-		doc.setDocumentType("text/plain");
-		doc.setFolderName("jbpm-test");
-		doc.setFolderPath("/");
-		doc.setDocumentContent(content.getBytes());
+		doc.setName("simple" + System.currentTimeMillis() +".txt");
+		doc.addAttribute("type", "text/plain");
+		doc.addAttribute("location", "/jbpm-test");
+		doc.setContent(content.getBytes());
 		
 		workItem.setParameter("Document", doc);
 		handler.executeWorkItem(workItem, null);
 		
-		String storedValue = getDocumentContent(doc.getObjectId());
+		String storedValue = getDocumentContent(doc.getIdentifier());
 		assertEquals(content, storedValue);
 				
 		workItem.setParameter("Operation", "DOC_FETCH");
 		handler.executeWorkItem(workItem, null);
 		
-		storedValue = getDocumentContent(doc.getObjectId());
+		storedValue = getDocumentContent(doc.getIdentifier());
 		assertEquals(content, storedValue);
 	}
 	
