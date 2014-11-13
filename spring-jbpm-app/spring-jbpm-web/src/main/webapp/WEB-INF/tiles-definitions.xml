@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE tiles-definitions PUBLIC  
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+  <definition name="DefaultTemplate" template="/WEB-INF/pages/template/site.jsp">
+    <put-attribute name="title" value="jBPM Spring application" />
+    <put-attribute name="header" value="/WEB-INF/pages/template/header.jsp" />
+    <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
+    <put-attribute name="body" value="" />
+    <put-attribute name="footer" value="/WEB-INF/pages/template/footer.jsp" />
+  </definition>
+  
+  <!-- welcome page -->
+  <definition name="index" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/index.jsp" />
+  </definition>
+
+  <!-- deployment pages -->
+  <definition name="deploymentList" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/deploymentList.jsp" />
+  </definition>
+  
+  <definition name="deployment" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/deployment.jsp" />
+  </definition>
+  
+  <definition name="deploymentUnit" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/deploymentUnit.jsp" />
+  </definition> 
+  
+  <definition name="newDeploymentUnit" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/newDeploymentUnit.jsp" />
+  </definition> 
+  
+  <!-- process definition pages -->
+  <definition name="processDefList" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/processDefList.jsp" />
+  </definition> 
+  
+  <definition name="processDef" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/processDef.jsp" />
+  </definition> 
+  
+  <!-- process intances pages -->
+  <definition name="processInstanceList" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/processInstanceList.jsp" />
+  </definition> 
+  <definition name="newProcessInstance" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/newProcessInstance.jsp" />
+  </definition> 
+  <definition name="processInstanceStatus" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/processInstanceStatus.jsp" />
+  </definition>  
+  <definition name="processInstance" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/processInstance.jsp" />
+  </definition>  
+  
+  <!-- task pages -->
+  <definition name="taskList" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/taskList.jsp" />
+  </definition>   
+  <definition name="taskMessage" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/taskMessage.jsp" />
+  </definition> 
+  <definition name="task" extends="DefaultTemplate">
+      <put-attribute name="body" value="/WEB-INF/pages/task.jsp" />
+  </definition> 
+  
+</tiles-definitions>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+  <context:component-scan base-package="org.jbpm.spring.web" />
+
+  <import resource="classpath:jee-tx-context.xml" />
+  <import resource="classpath:jpa-context.xml" />
+  <import resource="classpath:jbpm-context.xml" />
+
+  <mvc:annotation-driven />
+  <mvc:default-servlet-handler />
+  <mvc:resources mapping="/resources/**" location="/resources/" />
+
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver" />
+
+  <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+    <property name="definitions">
+      <list>
+        <value>/WEB-INF/tiles-definitions.xml</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="deploymentStore" class="org.jbpm.kie.services.impl.store.DeploymentStore">
+    <property name="commandService" ref="transactionCmdService" />
+  </bean>
+  
+  <bean id="deploymentSync" class="org.jbpm.kie.services.impl.store.DeploymentSynchronizer">
+    <property name="deploymentService" ref="deploymentService"/>
+    <property name="deploymentStore" ref="deploymentStore" />
+  </bean>
+  
+  <bean id="syncInvoker" class="org.jbpm.kie.services.impl.store.DeploymentSyncInvoker" init-method="start" destroy-method="stop">
+    <constructor-arg name="synchronizer" ref="deploymentSync"/>
+  </bean>
+
+</beans>
