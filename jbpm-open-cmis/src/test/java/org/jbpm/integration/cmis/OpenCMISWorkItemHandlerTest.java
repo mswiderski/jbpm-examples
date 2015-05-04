@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
@@ -38,7 +39,7 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 	private String user = "admin";
 	private String password = "admin";
 	private String url = "http://cmis.alfresco.com/cmisatom";
-	private String repository = "bb212ecb-122d-47ea-b5c1-128affb9cd8f";
+	private String repository = "e993fdbb-f417-4c34-911a-21af532c04fc";
 	
 	@Test
 	public void testCreateDocument() throws Exception {
@@ -50,6 +51,7 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
+		doc.setAttributes(new HashMap<String, String>());
 		doc.setName("simple" + System.currentTimeMillis() +".txt");
 		doc.addAttribute("type", "text/plain");
 		doc.addAttribute("location", "/jbpm-test");
@@ -72,6 +74,7 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
+		doc.setAttributes(new HashMap<String, String>());
 		doc.setName("simple" + System.currentTimeMillis() +".txt");
 		doc.addAttribute("type", "text/plain");
 		doc.addAttribute("location", "/jbpm-test");
@@ -102,6 +105,7 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
+		doc.setAttributes(new HashMap<String, String>());
 		doc.setName("simple" + System.currentTimeMillis() +".txt");
 		doc.addAttribute("type", "text/plain");
 		doc.addAttribute("location", "/jbpm-test");
@@ -130,6 +134,7 @@ public class OpenCMISWorkItemHandlerTest extends OpenCMISSupport {
 		String content = "very simple text content";
 		
 		Document doc = new DocumentImpl();
+		doc.setAttributes(new HashMap<String, String>());
 		doc.setName("simple" + System.currentTimeMillis() +".txt");
 		doc.addAttribute("type", "text/plain");
 		doc.addAttribute("location", "/jbpm-test");

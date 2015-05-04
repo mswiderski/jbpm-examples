@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
@@ -60,6 +61,7 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 	private String password;
 	private String url;
 	private String repository;
+	private String contentUrl;
 	private UpdateMode mode = UpdateMode.OVERRIDE;
 	
 	public OpenCMISPlaceholderResolverStrategy(String user, String password, String url, String repository) {
@@ -76,6 +78,23 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 		this.repository = repository;
 		this.mode = mode;
 	}
+	
+	   public OpenCMISPlaceholderResolverStrategy(String user, String password, String url, String repository, String contentUrl) {
+	        this.user = user;
+	        this.password = password;
+	        this.url = url;
+	        this.repository = repository;
+	        this.contentUrl = contentUrl;
+	    }
+	    
+	    public OpenCMISPlaceholderResolverStrategy(String user, String password, String url, String repository, String contentUrl, UpdateMode mode) {
+	        this.user = user;
+	        this.password = password;
+	        this.url = url;
+	        this.repository = repository;
+	        this.contentUrl = contentUrl;
+	        this.mode = mode;
+	    }
 
 	public boolean accept(Object object) {
 		if (object instanceof Document) {
@@ -89,9 +108,9 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 		Session session = getRepositorySession(user, password, url, repository);
 		try {
 			if (document.getContent() != null) {
-				String type = document.getAttribute("type");
-				if (document.getIdentifier() == null) {
-					String location = document.getAttribute("location");
+				String type = getType(document);
+				if (document.getIdentifier() == null || document.getIdentifier().isEmpty()) {
+					String location = getLocation(document);
 					
 					Folder parent = findFolderForPath(session, location);
 					if (parent == null) {
@@ -128,15 +147,20 @@ public class OpenCMISPlaceholderResolverStrategy extends OpenCMISSupport impleme
 		try {
 			org.apache.chemistry.opencmis.client.api.Document doc = (org.apache.chemistry.opencmis.client.api.Document) findObjectForId(session, objectId);
 			Document document = (Document) Class.forName(canonicalName).newInstance();
+			document.setAttributes(new HashMap<String, String>());
 			
 			document.setIdentifier(objectId);
 			document.setName(doc.getName());
+			document.setLastModified(doc.getLastModificationDate().getTime());
+			document.setSize(doc.getContentStreamLength());
 			document.addAttribute("location", getFolderName(doc.getParents()) + getPathAsString(doc.getPaths()));
-			if (doc.getContentStream() != null) {
+			if (doc.getContentStream() != null && contentUrl == null) {
 				ContentStream stream = doc.getContentStream();
-				document.setContent(IOUtils.toByteArray(stream.getStream()));
+				document.setContent(IOUtils.toByteArray(stream.getStream()));				
 				document.addAttribute("updated", "false");
 				document.addAttribute("type", stream.getMimeType());				
+			} else {
+			    document.setLink(contentUrl + document.getIdentifier());
 			}
 			return document;
 		} catch(Exception e) {

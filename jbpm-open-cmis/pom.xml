@@ -4,11 +4,11 @@
   <artifactId>jbpm-open-cmis</artifactId>
   <version>1.0.0</version>
   <name>OpenCMIS integration for jBPM</name>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <drools.version>6.1.0-SNAPSHOT</drools.version>
-    <jbpm.version>6.1.0-SNAPSHOT</jbpm.version>
+    <drools.version>6.2.0.Final</drools.version>
+    <jbpm.version>6.2.0.Final</jbpm.version>
     <hibernate.version>4.2.0.Final</hibernate.version>
     <hibernate.core.version>4.2.0.Final</hibernate.core.version>
     <slf4j.version>1.6.4</slf4j.version>
@@ -69,7 +69,7 @@
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
     <!-- open CMIS client implementation -->
     <dependency>
 	    <groupId>org.apache.chemistry.opencmis</groupId>
@@ -120,6 +120,20 @@
     	<artifactId>jbpm-document</artifactId>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <configuration>
+        <outputDirectory>
+            ${project.build.directory}
+        </outputDirectory>
+    </configuration>
+</plugin>
+    </plugins>
+  </build>
 
   <repositories>
     <repository>

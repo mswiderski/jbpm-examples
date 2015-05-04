@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.activation.MimetypesFileTypeMap;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.DocumentType;
@@ -260,5 +262,23 @@ public abstract class OpenCMISSupport {
 		Document document = (Document) session.getObject(objectId);
 		document.delete(false);
 	}
+	
+	protected String getType(org.jbpm.document.Document document) {
+	    String type = document.getAttribute("type");
+	    if (type == null || type.isEmpty()) {
+	        type = MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(document.getName());
+	    }
+	    
+	    return type;
+	}
+	
+	protected String getLocation(org.jbpm.document.Document document) {
+	    String location = document.getAttribute("location");
+        if (location == null || location.isEmpty()) {
+            location = "/";
+        }
+        
+        return location;
+    }
 	
 }

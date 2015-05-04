@@ -68,7 +68,7 @@ import org.kie.internal.task.api.InternalTaskService;
 
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 // tests are ignored as they rely on external service and are here to illustrate the usage
-//@Ignore
+@Ignore
 public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 
     private static PoolingDataSource pds;  
@@ -76,7 +76,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
     private String user = "admin";
 	private String password = "admin";
 	private String url = "http://cmis.alfresco.com/cmisatom";
-	private String repository = "bb212ecb-122d-47ea-b5c1-128affb9cd8f";
+	private String repository = "e993fdbb-f417-4c34-911a-21af532c04fc";
     
     @BeforeClass
     public static void setupOnce() {
@@ -149,6 +149,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
         assertNotNull(ksession);
         Map<String, Object> params = new HashMap<String, Object>();
         Document doc = new DocumentImpl();
+        doc.setAttributes(new HashMap<String, String>());
         doc.setName("simple"+System.currentTimeMillis()+".txt");
 		doc.addAttribute("type", "text/plain");
 		doc.addAttribute("location", "/jbpm-test");
@@ -254,6 +255,7 @@ public class OpenCMISVariablesProcessTest extends OpenCMISSupport {
 		    byte[] buf = contents.getBytes();
 		    
 	        document.setContent(buf);
+	        document.addAttribute("updated","true");
 	        taskService.start(taskId, "john");
 	        taskService.complete(taskId, "john", (Map)Collections.singletonMap("doc_out", document));
 	        
