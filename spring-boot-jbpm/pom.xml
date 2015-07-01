@@ -23,8 +23,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <start-class>org.jbpm.spring.boot.Application</start-class>
     <java.version>1.7</java.version>
-    <drools.version>6.2.0-SNAPSHOT</drools.version>
-    <jbpm.version>6.2.0-SNAPSHOT</jbpm.version>
+    <drools.version>6.2.0.Final</drools.version>
+    <jbpm.version>6.2.0.Final</jbpm.version>
     <app.version>0.0.1-SNAPSHOT</app.version>
 
     <hibernate.version>4.2.0.Final</hibernate.version>
