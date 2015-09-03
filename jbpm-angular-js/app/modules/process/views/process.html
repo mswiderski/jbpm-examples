@@ -1,0 +1,31 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+
+<h1>{{ process['process-name'] }}</h1>
+
+<p><b>Process ID:</b> {{ process['process-id'] }}</p>
+<p><b>Process version:</b> {{ process['process-version'] }}</p>
+
+
+<ul class="specs">
+  <li>
+    <span>Variables</span>
+    <dl>
+      <dd ng-repeat="(key, value) in process['process-variables']">'{{key}}' with type  '{{value}}'</dd>
+    </dl>
+  </li>
+
+  <li>
+    <span>Actors and Groups</span>
+    <dl>
+      <dd ng-repeat="(key, value) in process['associated-entities']">'{{value}}' assigned to task '{{key}}'</dd>
+    </dl>
+  </li>
+
+  <li>
+    <span>Service tasks</span>
+    <dl>
+      <dd ng-repeat="task in process['tasks']">'{{task}}'</dd>
+    </dl>
+  </li>
+</ul>

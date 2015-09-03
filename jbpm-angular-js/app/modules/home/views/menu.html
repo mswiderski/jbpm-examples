@@ -1,0 +1,21 @@
+﻿<style>
+    .active
+    {
+        border-bottom: 2px solid red;
+        bottom: 0;
+        content: "";
+        left: 0;
+        position: absolute;
+        width: 100px;
+    }
+</style>
+<div class="collapse navbar-collapse" ng-controller="HeaderController">
+    <ul class="nav navbar-nav">
+        <li ng-class="{ active: isActive('/')}"><a href="#/">Home</a></li>
+        <li ng-class="{ active: isActive('/containers')}"><a href="#/containers">Containers</a></li>
+        <li ng-class="{ active: isActive('/processes')}"><a href="#/processes">Processes</a></li>
+        <li ng-class="{ active: isActive('/processinstances')}"><a href="#/processinstances">Processes Instances</a></li>
+        <li ng-class="{ active: isActive('/tasks')}"><a href="#/tasks">Tasks</a></li>
+        <li><a href="#/login">Logout</a></li>
+    </ul>
+</div>

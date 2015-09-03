@@ -1,0 +1,50 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+
+<h1>{{ task['task-name'] }}</h1>
+
+<p><b>Task ID:</b> {{ task['task-id'] }}</p>
+<p><b>Task description:</b> {{ task['task-description'] }}</p>
+
+<p><b>Task status:</b> {{ task['task-status'] }}</p>
+
+<p><b>Priority:</b> {{ task['task-priority'] }}</p>
+
+<p><b>Actual owner:</b> {{ task['task-actual-owner'] }}</p>
+
+<p><b>Created by:</b> {{ task['task-created-by'] }}</p>
+
+<p><b>Created on:</b> {{ task['task-created-on'] | asDate | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+
+<p><b>Process instance id:</b> {{ task['task-process-instance-id'] }}</p>
+
+<p><b>Process id:</b> {{ task['task-process-id'] }}</p>
+
+<p><b>Container id:</b> {{ task['task-container-id'] }}</p>
+
+<p><b>Task inputs</b></p>
+<ul class="specs">
+  <li>
+    <dl>
+      <dd ng-repeat="(key, value) in task['task-input-data']">'{{key}}' with value  '{{value}}'</dd>
+    </dl>
+  </li>
+</ul>
+
+<div ng-controller="TaskInstanceController" style="text-align:center">
+  <div ng-if="task['task-status'] == 'Ready'">
+
+    <button ng-click="claimTask(task['task-container-id'], task['task-id'])">Claim</button>
+
+  </div>
+  <div ng-if="task['task-status'] == 'Reserved'">
+
+    <button ng-click="startTask(task['task-container-id'], task['task-id'])">Start</button>
+
+    <button ng-click="releaseTask(task['task-container-id'], task['task-id'])">Release</button>
+  </div>
+  <div ng-if="task['task-status'] == 'InProgress'">
+    <button ng-click="goToCompleteTask(task['task-container-id'], task['task-process-id'], task['task-name'], task['task-id'])">Complete</button>
+    <button ng-click="releaseTask(task['task-container-id'], task['task-id'])">Release</button>
+  </div>
+</div>

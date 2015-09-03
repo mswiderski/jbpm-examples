@@ -1,0 +1,40 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+<div class="container-fluid">
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Process Id</th>
+        <th>Process Name</th>
+        <th>Version</th>
+        <th>Process Instance Id</th>
+        <th>Container Id</th>
+        <th>Process Description</th>
+        <th>Initiator</th>
+        <th>Start date</th>
+        <th>Status</th>
+        <th>Correlation Key</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="processinstance in processinstances">
+        <td>{{ processinstance['process-id'] }}</td>
+        <td>{{ processinstance['process-name'] }}</td>
+        <td>{{ processinstance['process-version'] }}</td>
+        <td>{{ processinstance['process-instance-id'] }}</td>
+        <td>{{ processinstance['container-id'] }}</td>
+        <td>{{ processinstance['process-instance-desc'] }}</td>
+        <td>{{ processinstance['initiator'] }}</td>
+        <td>{{ processinstance['start-date'] | asDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td>{{ convertStatus(processinstance['process-instance-state']) }}</td>
+        <td>{{ processinstance['correlation-key'] }}</td>
+        <td>
+          <a  href="#processinstances/{{ processinstance['container-id'] }}/{{ processinstance['process-instance-id'] }}">Details</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

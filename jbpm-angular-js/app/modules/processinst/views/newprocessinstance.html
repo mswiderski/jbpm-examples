@@ -1,0 +1,29 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+
+<h3>New instance of {{ process['process-name'] }}</h3>
+
+<p><b>Process ID:</b> {{ process['process-id'] }}</p>
+<p><b>Process version:</b> {{ process['process-version'] }}</p>
+
+
+<form ng-submit="submit()" ng-controller="NewProcessInstanceController" novalidate>
+
+    <span><b>Variables</b></span>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+          <tr ng-repeat="variable in formData.variables">
+              <td><b>{{ variable.name }}</b></td>
+              <td><textarea name="{{variable.name}}" ng-model="variable.value" rows="5" cols="50"/></td>
+          </tr>
+        <tr>
+            <td colspan="2"><input type="submit" id="submit" value="Submit"/></td>
+        </tr>
+        </table>
+    </dl>
+</form>

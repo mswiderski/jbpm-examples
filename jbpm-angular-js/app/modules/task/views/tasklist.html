@@ -1,0 +1,44 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+<div class="container-fluid">
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Task Id</th>
+        <th>Task Name</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Actual Owner</th>
+        <th>Created By</th>
+        <th>Created On</th>
+        <th>Activation Time</th>
+        <th>Process Instance Id</th>
+        <th>Process Id</th>
+        <th>Container Id</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="task in tasks">
+        <td>{{ task['task-id'] }}</td>
+        <td>{{ task['task-name']}}</td>
+        <td>{{ task['task-description'] }}</td>
+        <td>{{ task['task-status'] }}</td>
+        <td>{{ task['task-priority'] }}</td>
+        <td>{{ task['task-actual-owner'] }}</td>
+        <td>{{ task['task-created-by'] }}</td>
+        <td>{{ task['task-created-on'] | asDate | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ task['task-activation-time'] | asDate | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ task['task-proc-inst-id'] }}</td>
+        <td>{{ task['task-proc-def-id'] }}</td>
+        <td>{{ task['task-container-id'] }}</td>
+        <td>
+          <a  href="#tasks/{{ task['task-container-id'] }}/{{ task['task-id'] }}">Details</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

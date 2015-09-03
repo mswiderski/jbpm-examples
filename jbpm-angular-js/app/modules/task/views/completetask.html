@@ -1,0 +1,43 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+
+<h1>{{ task['task-name'] }}</h1>
+
+<p><b>Task ID:</b> {{ task['task-id'] }}</p>
+<p><b>Task description:</b> {{ task['task-description'] }}</p>
+
+<p><b>Task status:</b> {{ task['task-status'] }}</p>
+
+<p><b>Priority:</b> {{ task['task-priority'] }}</p>
+
+<p><b>Actual owner:</b> {{ task['task-actual-owner'] }}</p>
+
+<p><b>Task inputs</b></p>
+<ul class="specs">
+  <li>
+    <dl>
+      <dd ng-repeat="(key, value) in task['task-input-data']">'{{key}}' with value  '{{value}}'</dd>
+    </dl>
+  </li>
+</ul>
+
+<form ng-submit="completeTask(task['task-container-id'], task['task-id'])" ng-controller="CompleteTaskInstanceController" novalidate>
+
+  <span><b>Task outputs</b></span>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="variable in formData.variables">
+      <td><b>{{ variable.name }}</b></td>
+      <td><textarea name="{{variable.name}}" ng-model="variable.value" rows="5" cols="50"/></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" id="submit" value="Submit"/></td>
+    </tr>
+  </table>
+  </dl>
+</form>

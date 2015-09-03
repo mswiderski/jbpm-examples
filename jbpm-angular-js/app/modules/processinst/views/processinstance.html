@@ -1,0 +1,35 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+
+<h1>{{ processInstance['process-name'] }}</h1>
+
+<p><b>Process ID:</b> {{ processInstance['process-id'] }}</p>
+<p><b>Process version:</b> {{ processInstance['process-version'] }}</p>
+
+<p><b>Process Instance ID:</b> {{ processInstance['process-instance-id'] }}</p>
+
+<p><b>Initiator:</b> {{ processInstance['initiator'] }}</p>
+
+<p><b>Correlation key:</b> {{ processInstance['correlation-key'] }}</p>
+
+<p><b>Status:</b> {{ convertStatus(processInstance['process-instance-state']) }}</p>
+
+<p><b>Description:</b> {{ processInstance['process-instance-desc'] }}</p>
+
+<p><b>Status:</b> {{ processInstance['start-date'] | asDate | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+
+
+<p><b>Variables</b></p>
+<ul class="specs">
+  <li>
+    <dl>
+      <dd ng-repeat="(key, value) in processInstance['process-instance-variables']">'{{key}}' with value  '{{value}}'</dd>
+    </dl>
+  </li>
+</ul>
+
+<div ng-if="processInstance['process-instance-state'] == 1">
+  <div ng-controller="AbortProcessInstanceController">
+    <button ng-click="abortProcessInstance(processInstance['container-id'], processInstance['process-instance-id'])">Abort</button>
+  </div>
+</div>

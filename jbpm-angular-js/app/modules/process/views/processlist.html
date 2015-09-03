@@ -1,0 +1,31 @@
+<header ng-include src="'modules/home/views/menu.html'">
+</header>
+<div class="container-fluid">
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Process Id</th>
+        <th>Process Name</th>
+        <th>Version</th>
+        <th>Package</th>
+        <th>Container Id</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="process in processes">
+        <td>{{ process['process-id'] }}</td>
+        <td>{{ process['process-name'] }}</td>
+        <td>{{ process['process-version'] }}</td>
+        <td>{{ process['package'] }}</td>
+        <td>{{ process['container-id'] }}</td>
+        <td>
+          <a  href="#processes/{{ process['container-id'] }}/{{ process['process-id'] }}">Details</a> <br/>
+          <a  href="#processinstances/{{ process['container-id'] }}/instance/{{ process['process-id'] }}">New</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
