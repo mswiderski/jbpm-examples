@@ -14,6 +14,7 @@ import org.kie.server.api.model.KieContainerResource;
 import org.kie.server.api.model.KieContainerResourceList;
 import org.kie.server.api.model.ReleaseId;
 import org.kie.server.api.model.definition.ProcessDefinition;
+import org.kie.server.api.model.instance.NodeInstance;
 import org.kie.server.api.model.instance.ProcessInstance;
 import org.kie.server.api.model.instance.TaskSummary;
 import org.kie.server.client.KieServicesClient;
@@ -77,6 +78,9 @@ public class KieExecutionServerClientTest {
         params.put("age", 25);
         Long processInstanceId = processClient.startProcess(containerId, processId, params);
         System.out.println("\t######### Process instance id: " + processInstanceId);
+        
+        List<NodeInstance> completedNodes = queryClient.findCompletedNodeInstances(processInstanceId, 0, 10);
+        System.out.println("\t######### Completed nodes: " + completedNodes);
 
         UserTaskServicesClient taskClient = kieServicesClient.getServicesClient(UserTaskServicesClient.class);
         // find available tasks
@@ -106,6 +110,9 @@ public class KieExecutionServerClientTest {
         RuleServicesClient ruleClient = kieServicesClient.getServicesClient(RuleServicesClient.class);
         ruleClient.executeCommands(containerId, executionCommand);
         System.out.println("\t######### Rules executed");
+        
+        completedNodes = queryClient.findCompletedNodeInstances(processInstanceId, 0, 10);
+        System.out.println("\t######### Completed nodes: " + completedNodes);
         
         List<ProcessInstance> instances = queryClient.findProcessInstances(0, 10);
         System.out.println("\t######### Active process instances: " + instances);
