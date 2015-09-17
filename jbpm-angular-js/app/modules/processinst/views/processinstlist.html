@@ -31,7 +31,9 @@
         <td>{{ convertStatus(processinstance['process-instance-state']) }}</td>
         <td>{{ processinstance['correlation-key'] }}</td>
         <td>
-          <a  href="#processinstances/{{ processinstance['container-id'] }}/{{ processinstance['process-instance-id'] }}">Details</a>
+          <div ng-if="processinstance['process-instance-state'] == 1">
+            <a  href="#processinstances/{{ processinstance['container-id'] }}/{{ processinstance['process-instance-id'] }}">Details</a>
+          </div>
         </td>
       </tr>
       </tbody>

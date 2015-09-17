@@ -16,11 +16,19 @@
 <ul class="specs">
   <li>
     <dl>
-      <dd ng-repeat="(key, value) in task['task-input-data']">'{{key}}' with value  '{{value}}'</dd>
+      <dd ng-repeat="(key, value) in task['task-input-data']">'{{key}}' with value  <b>'{{value}}'</b></dd>
     </dl>
   </li>
 </ul>
-
+<div class="alert alert-info">
+  Task variables should be given as valid JSON items
+  <ul>
+    <li>"my string" - for string type</li>
+    <li>123 - for number</li>
+    <li>{"one", "two", "three"} - for list of string</li>
+    <li>{"Person":{"name":"john","age":25}} - for custom objects where the key can be either short name or FQCN</li>
+  </ul>
+</div>
 <form ng-submit="completeTask(task['task-container-id'], task['task-id'])" ng-controller="CompleteTaskInstanceController" novalidate>
 
   <span><b>Task outputs</b></span>
