@@ -10,4 +10,21 @@
     <module>kie-server-mina-client</module>
     <module>kie-server-drools-rest-ext</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>3.1.4.GA</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <repositories>
+    <repository>
+      <id>jboss-community-repository</id>
+      <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+    </repository>
+  </repositories>
 </project>
