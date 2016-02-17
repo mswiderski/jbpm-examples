@@ -31,6 +31,15 @@
   </li>
 </ul>
 
+<p><b>Task outputs</b></p>
+<ul class="specs">
+  <li>
+    <dl>
+      <dd ng-repeat="(key, value) in task['task-output-data']">'{{key}}' with value  <b>'{{value}}'</b></dd>
+    </dl>
+  </li>
+</ul>
+
 <div ng-controller="TaskInstanceController" style="text-align:center">
   <div ng-if="task['task-status'] == 'Ready'">
 
