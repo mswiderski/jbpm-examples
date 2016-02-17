@@ -6,7 +6,15 @@
 <p><b>Process ID:</b> {{ process['process-id'] }}</p>
 <p><b>Process version:</b> {{ process['process-version'] }}</p>
 
-
+<div class="alert alert-info">
+    Process variables should be given as valid JSON items
+    <ul>
+        <li>"my string" - for string type</li>
+        <li>123 - for number</li>
+        <li>{"one", "two", "three"} - for list of string</li>
+        <li>{"Person":{"name":"john","age":25}} - for custom objects where the key can be either short name or FQCN</li>
+    </ul>
+</div>
 <form ng-submit="submit()" ng-controller="NewProcessInstanceController" novalidate>
 
     <span><b>Variables</b></span>

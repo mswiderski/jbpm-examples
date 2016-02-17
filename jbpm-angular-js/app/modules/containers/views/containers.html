@@ -9,7 +9,6 @@
                 <th>Status</th>
                 <th>ReleaseId</th>
                 <th>Resolved ReleaseId</th>
-                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -18,9 +17,6 @@
                 <td>{{ container['status'] }}</td>
                 <td>{{ container['release-id']['group-id'] }}:{{ container['release-id']['artifact-id'] }}:{{ container['release-id']['version'] }}</td>
                 <td>{{ container['resolved-release-id']['group-id'] }}:{{ container['resolved-release-id']['artifact-id'] }}:{{ container['resolved-release-id']['version'] }}</td>
-                <td>
-                    <a  href="#" ng-click="edit(container['container-id'])">edit</a>
-                </td>
             </tr>
             </tbody>
         </table>
