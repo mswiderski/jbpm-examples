@@ -118,9 +118,7 @@ angular.module('TaskInstances')
                             data += '"' + variable.name + '":' + variable.value + ',';
                         }
                     });
-                    if (data.length > 1) {
-                        data = data.substring(0, data.length - 1);
-                    }
+                    data = data.substring(0, data.length - 1);
                     data+= '}';
 
                     TaskInstanceService.CompleteInstance(containerId, taskId, data, function (response) {

@@ -70,9 +70,7 @@ angular.module('ProcessInstances')
                             data += '"' + variable.name + '":' + variable.value + ',';
                         }
                     });
-                    if (data.length > 1) {
-                        data = data.substring(0, data.length - 1);
-                    }
+                    data = data.substring(0, data.length - 1);
                     data+= '}';
 
                     ProcessService.NewInstance($scope.process['container-id'], $scope.process['process-id'], data, function (response) {
