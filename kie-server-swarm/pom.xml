@@ -1,0 +1,342 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.kie.server.swarm</groupId>
+  <artifactId>kie-server-swarm</artifactId>
+  <version>1.0</version>
+  <name>KIE Server on Wildfly Swarm</name>
+
+  <properties>
+    <version.wildfly-swarm>1.0.0.Alpha8</version.wildfly-swarm>
+    <version.org.kie>6.4.0-SNAPSHOT</version.org.kie>
+
+    <version.h2>1.4.187</version.h2>
+    <version.postgresql>9.4.1207</version.postgresql>
+    <version.mysql>5.1.38</version.mysql>
+
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>bom</artifactId>
+        <version>${version.wildfly-swarm}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <!-- kie server dependencies -->
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-common</artifactId>
+      <version>${version.org.kie}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dom4j</groupId>
+          <artifactId>dom4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss.spec.javax.security.jacc</groupId>
+          <artifactId>jboss-jacc-api_1.4_spec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jaxrs-api</artifactId>
+          <groupId>org.jboss.resteasy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>resteasy-jaxrs</artifactId>
+          <groupId>org.jboss.resteasy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>resteasy-jaxb-provider</artifactId>
+          <groupId>org.jboss.resteasy</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-rest-common</artifactId>
+      <version>${version.org.kie}</version>
+    </dependency>
+
+    <!-- drools kie server dependencies -->
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-services-drools</artifactId>
+      <version>${version.org.kie}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-rest-drools</artifactId>
+      <version>${version.org.kie}</version>
+    </dependency>
+
+
+    <!-- wildfly swarm dependencies -->
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>jaxrs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>security</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+
+  <profiles>
+    <!-- default profile for Drools without persistence -->
+    <profile>
+      <id>BRM</id>
+      <activation>
+        <property>
+          <name>BRM</name>
+        </property>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>wildfly-swarm-plugin</artifactId>
+            <version>${version.wildfly-swarm}</version>
+            <configuration>
+              <mainClass>org.kie.server.swarm.brm.KieServerMain</mainClass>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>package</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.5.1</version>
+            <configuration>
+              <source>${maven.compiler.source}</source>
+              <target>${maven.compiler.target}</target>
+              <excludes>
+                <exclude>org/kie/server/swarm/bpm/*.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- profile that includes jBPM and perssitence -->
+    <profile>
+      <id>BPM</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>BPM</name>
+        </property>
+      </activation>
+      <dependencies>
+        <!-- jbpm kie server dependencies -->
+        <dependency>
+          <groupId>org.kie.server</groupId>
+          <artifactId>kie-server-services-jbpm</artifactId>
+          <version>${version.org.kie}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.transaction</groupId>
+              <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>dom4j</groupId>
+              <artifactId>dom4j</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.el</groupId>
+              <artifactId>jboss-el-api_2.2_spec</artifactId>
+            </exclusion>
+            <exclusion>
+              <artifactId>asm</artifactId>
+              <groupId>asm</groupId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.kie.server</groupId>
+          <artifactId>kie-server-rest-jbpm</artifactId>
+          <version>${version.org.kie}</version>
+        </dependency>
+        <!-- jbpm ui kie server dependencies -->
+        <dependency>
+          <groupId>org.kie.server</groupId>
+          <artifactId>kie-server-services-jbpm-ui</artifactId>
+          <version>${version.org.kie}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.transaction</groupId>
+              <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>dom4j</groupId>
+              <artifactId>dom4j</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.el</groupId>
+              <artifactId>jboss-el-api_2.2_spec</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.kie.server</groupId>
+          <artifactId>kie-server-rest-jbpm-ui</artifactId>
+          <version>${version.org.kie}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.kie</groupId>
+          <artifactId>jbpm-process-svg</artifactId>
+          <version>${version.org.kie}</version>
+        </dependency>
+
+
+        <!-- persistence -->
+        <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-entitymanager</artifactId>
+          <version>4.2.20.Final</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.transaction</groupId>
+              <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>dom4j</groupId>
+              <artifactId>dom4j</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-core</artifactId>
+          <version>4.2.20.Final</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.transaction</groupId>
+              <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+
+        <dependency>
+          <groupId>org.hibernate.common</groupId>
+          <artifactId>hibernate-commons-annotations</artifactId>
+          <version>4.0.2.Final</version>
+        </dependency>
+        <dependency>
+          <groupId>dom4j</groupId>
+          <artifactId>dom4j</artifactId>
+          <version>1.6.1</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.spec.javax.jms</groupId>
+          <artifactId>jboss-jms-api_1.1_spec</artifactId>
+          <version>1.0.1.Final</version>
+        </dependency>
+
+        <!-- wildfly swarm dependencies -->
+        <dependency>
+          <groupId>org.wildfly.swarm</groupId>
+          <artifactId>datasources</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.wildfly.swarm</groupId>
+          <artifactId>transactions</artifactId>
+        </dependency>
+        <!-- database dependencies -->
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <version>${version.h2}</version>
+        </dependency>
+        <!-- <dependency> <groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId> 
+          <version>${version.postgresql}</version> </dependency> <dependency> <groupId>mysql</groupId> 
+          <artifactId>mysql-connector-java</artifactId> <version>${version.mysql}</version> 
+          </dependency> -->
+      </dependencies>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>wildfly-swarm-plugin</artifactId>
+            <version>${version.wildfly-swarm}</version>
+            <configuration>
+              <mainClass>org.kie.server.swarm.bpm.KieServerMain</mainClass>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>package</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.5.1</version>
+            <configuration>
+              <source>${maven.compiler.source}</source>
+              <target>${maven.compiler.target}</target>
+              <excludes>
+                <exclude>**/src/main/java/org/kie/server/swarm/brm/*.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
