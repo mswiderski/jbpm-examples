@@ -10,8 +10,8 @@
     <version.wildfly-swarm>1.0.0.Alpha8</version.wildfly-swarm>
     <version.org.kie>6.4.0-SNAPSHOT</version.org.kie>
 
-    <version.h2>1.4.187</version.h2>
-    <version.postgresql>9.4.1207</version.postgresql>
+    <version.h2>1.4.191</version.h2>
+    <version.postgresql>9.4.1208</version.postgresql>
     <version.mysql>5.1.38</version.mysql>
 
     <maven.compiler.target>1.8</maven.compiler.target>
