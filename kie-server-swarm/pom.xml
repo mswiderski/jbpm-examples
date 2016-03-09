@@ -240,7 +240,7 @@
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-entitymanager</artifactId>
-          <version>4.2.20.Final</version>
+          <version>4.2.21.Final</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.spec.javax.transaction</groupId>
@@ -255,7 +255,7 @@
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-core</artifactId>
-          <version>4.2.20.Final</version>
+          <version>4.2.21.Final</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.spec.javax.transaction</groupId>
