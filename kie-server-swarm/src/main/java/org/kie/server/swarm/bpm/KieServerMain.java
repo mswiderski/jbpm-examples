@@ -4,16 +4,17 @@ package org.kie.server.swarm.bpm;
 import java.util.Arrays;
 
 import org.kie.server.swarm.AbstractKieServerMain;
-import org.wildfly.swarm.container.Container;
+import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.datasources.DatasourcesFraction;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
 import org.wildfly.swarm.transactions.TransactionsFraction;
+import org.wildfly.swarm.undertow.WARArchive;
 
 public class KieServerMain extends AbstractKieServerMain {
     
     public static void main(String[] args) throws Exception {
 
-        Container container = new Container();
+        Swarm container = new Swarm();
         // Configure the Datasources subsystem with a driver and a datasource
         container.fraction(new DatasourcesFraction()
                         .jdbcDriver("h2", (d) -> {
@@ -32,7 +33,7 @@ public class KieServerMain extends AbstractKieServerMain {
         container.fraction(TransactionsFraction.createDefaultFraction());        
        
         System.out.println("\tBuilding kie server deployable...");
-        JAXRSArchive deployment = createDeployment(container);
+        JAXRSArchive deployment = createDeployment(container);       
         
         System.out.println("\tStarting Wildfly Swarm....");
         container.start();   

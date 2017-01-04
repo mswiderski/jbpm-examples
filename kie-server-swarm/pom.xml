@@ -7,8 +7,8 @@
   <name>KIE Server on Wildfly Swarm</name>
 
   <properties>
-    <version.wildfly-swarm>1.0.0.Alpha8</version.wildfly-swarm>
-    <version.org.kie>6.4.0-SNAPSHOT</version.org.kie>
+    <version.wildfly-swarm>2016.12.1</version.wildfly-swarm>
+    <version.org.kie>7.0.0-SNAPSHOT</version.org.kie>
 
     <version.h2>1.4.187</version.h2>
     <version.postgresql>9.4.1207</version.postgresql>
@@ -33,7 +33,21 @@
   </dependencyManagement>
 
   <dependencies>
-
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-provider-api</artifactId>
+      <version>2.8</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.19.0-GA</version>
+    </dependency>
+        <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>3.0.21</version>
+    </dependency>
     <!-- kie server dependencies -->
     <dependency>
       <groupId>org.kie.server</groupId>
@@ -106,6 +120,10 @@
       <groupId>org.wildfly.swarm</groupId>
       <artifactId>security</artifactId>
     </dependency>
+     <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>undertow</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -165,7 +183,7 @@
       </build>
     </profile>
 
-    <!-- profile that includes jBPM and perssitence -->
+    <!-- profile that includes jBPM and persistence -->
     <profile>
       <id>BPM</id>
       <activation>
@@ -174,7 +192,7 @@
           <name>BPM</name>
         </property>
       </activation>
-      <dependencies>
+      <dependencies>       
         <!-- jbpm kie server dependencies -->
         <dependency>
           <groupId>org.kie.server</groupId>
@@ -202,6 +220,34 @@
         <dependency>
           <groupId>org.kie.server</groupId>
           <artifactId>kie-server-rest-jbpm</artifactId>
+          <version>${version.org.kie}</version>
+        </dependency>
+         <dependency>
+          <groupId>org.kie.server</groupId>
+          <artifactId>kie-server-services-case-mgmt</artifactId>
+          <version>${version.org.kie}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.transaction</groupId>
+              <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>dom4j</groupId>
+              <artifactId>dom4j</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.el</groupId>
+              <artifactId>jboss-el-api_2.2_spec</artifactId>
+            </exclusion>
+            <exclusion>
+              <artifactId>asm</artifactId>
+              <groupId>asm</groupId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.kie.server</groupId>
+          <artifactId>kie-server-rest-case-mgmt</artifactId>
           <version>${version.org.kie}</version>
         </dependency>
         <!-- jbpm ui kie server dependencies -->
@@ -240,7 +286,7 @@
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-entitymanager</artifactId>
-          <version>4.2.20.Final</version>
+          <version>4.2.21.Final</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.spec.javax.transaction</groupId>
@@ -255,7 +301,7 @@
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-core</artifactId>
-          <version>4.2.20.Final</version>
+          <version>4.2.21.Final</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.spec.javax.transaction</groupId>
