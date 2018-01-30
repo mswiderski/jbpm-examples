@@ -4,13 +4,13 @@ package org.kie.server.swarm.brm;
 import java.util.Arrays;
 
 import org.kie.server.swarm.AbstractKieServerMain;
-import org.wildfly.swarm.container.Container;
+import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
 
 public class KieServerMain extends AbstractKieServerMain {
     
     public static void main(String[] args) throws Exception {
-        Container container = new Container();
+        Swarm container = new Swarm();
 
         System.out.println("\tBuilding kie server deployable...");
         JAXRSArchive deployment = createDeployment(container);

@@ -7,12 +7,14 @@
   <name>KIE Server on Wildfly Swarm</name>
 
   <properties>
-    <version.wildfly-swarm>2016.12.1</version.wildfly-swarm>
-    <version.org.kie>7.0.0-SNAPSHOT</version.org.kie>
+    <version.wildfly-swarm>2017.11.0</version.wildfly-swarm>
+    <version.org.kie>7.5.0.Final</version.org.kie>
 
     <version.h2>1.4.187</version.h2>
     <version.postgresql>9.4.1207</version.postgresql>
     <version.mysql>5.1.38</version.mysql>
+
+    <version.org.hibernate>5.1.10.Final</version.org.hibernate>
 
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -33,21 +35,21 @@
   </dependencyManagement>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-provider-api</artifactId>
-      <version>2.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.19.0-GA</version>
-    </dependency>
-        <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-      <version>3.0.21</version>
-    </dependency>
+      <dependency>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-provider-api</artifactId>
+        <version>3.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.21.0-GA</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>3.0.24</version>
+      </dependency>
     <!-- kie server dependencies -->
     <dependency>
       <groupId>org.kie.server</groupId>
@@ -192,7 +194,7 @@
           <name>BPM</name>
         </property>
       </activation>
-      <dependencies>       
+      <dependencies>
         <!-- jbpm kie server dependencies -->
         <dependency>
           <groupId>org.kie.server</groupId>
@@ -286,7 +288,7 @@
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-entitymanager</artifactId>
-          <version>4.2.21.Final</version>
+          <version>${version.org.hibernate}</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.spec.javax.transaction</groupId>
@@ -301,7 +303,7 @@
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-core</artifactId>
-          <version>4.2.21.Final</version>
+          <version>${version.org.hibernate}</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.spec.javax.transaction</groupId>
@@ -313,7 +315,7 @@
         <dependency>
           <groupId>org.hibernate.common</groupId>
           <artifactId>hibernate-commons-annotations</artifactId>
-          <version>4.0.2.Final</version>
+          <version>5.0.1.Final</version>
         </dependency>
         <dependency>
           <groupId>dom4j</groupId>
@@ -341,9 +343,9 @@
           <artifactId>h2</artifactId>
           <version>${version.h2}</version>
         </dependency>
-        <!-- <dependency> <groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId> 
-          <version>${version.postgresql}</version> </dependency> <dependency> <groupId>mysql</groupId> 
-          <artifactId>mysql-connector-java</artifactId> <version>${version.mysql}</version> 
+        <!-- <dependency> <groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId>
+          <version>${version.postgresql}</version> </dependency> <dependency> <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId> <version>${version.mysql}</version>
           </dependency> -->
       </dependencies>
       <build>
